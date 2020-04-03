@@ -1,39 +1,30 @@
-'use strict';
-
-const AWS = require('aws-sdk');
-
-const dynamodb = new AWS.DynamoDB.DocumentClient();
+const dynamodb = require('../libs/dynamo-lib');
+const { success, failure } = require('../libs/response-lib');
 
 module.exports.get = async event => {
+  //TODO: change to use logged in user
+  const userid = 'testuser';
+  const { entryid } = event.pathParameters;
+
+  const params = {
+    TableName: process.env.TABLE_NAME,
+    Key: {
+      userid,
+      entryid,
+    },
+  };
+
   try {
-    //TODO: change to use logged in user
-    const userid = 'testuser';
-    const { entryid } = event.pathParameters;
-
-    const params = {
-      TableName: process.env.TABLE_NAME,
-      Key: {
-        userid,
-        entryid,
-      },
-    };
-
-    const entry = await dynamodb.get(params).promise();
-    console.log('Success');
-    console.log(entry);
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify(entry),
-    };
+    const result = await dynamodb.call('get', params);
+    if (result.Item) {
+      return success(result.Item);
+    } else {
+      return failure({ status: false, message: 'Item not found.' });
+    }
   } catch (err) {
     console.error(`Failure: ${err.message}`);
-
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        message: `Error occurred while retrieving pain entry with id: ${entryid}`,
-      }),
-    };
+    return failure({
+      message: `Error occurred while retrieving pain entry with id: ${entryid}`,
+    });
   }
 };

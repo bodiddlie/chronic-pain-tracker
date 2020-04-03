@@ -1,3 +1,3 @@
 {
-  "body": "{\"userid\": \"testuser\", \"level\": 5}"
+  "body": "{\"userid\": \"testuser\", \"painLevel\": 5, \"note\": \"Note at creation time.\"}"
 }

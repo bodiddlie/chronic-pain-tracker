@@ -39,6 +39,13 @@ functions:
         path: pain-entries/{entryid}
         method: get
         cors: true
+  update:
+    handler: pain/update.update
+    events:
+      - http:
+        path: pain-entries/{entryid}
+        method: put
+        cors: true
 
 resources:
   Resources:

@@ -1,4 +1,5 @@
 {
+  "body": "{\"painLevel\":\"9\",\"note\":\"This is a test note\"}",
   "pathParameters": {
     "entryid": "d01df831-d674-4424-9a10-846d4e60b570"
   }

@@ -1,41 +1,25 @@
-'use strict';
-
-const AWS = require('aws-sdk');
-
-const dynamodb = new AWS.DynamoDB.DocumentClient();
+const dynamodb = require('../libs/dynamo-lib');
+const { success, failure } = require('../libs/response-lib');
 
 module.exports.list = async event => {
   //TODO: change to use logged in userid
-  //const {userid} = event.pathParameters
   const userid = 'testuser';
   const params = {
     TableName: process.env.TABLE_NAME,
-    KeyConditionExpression: '#userid = :u',
+    KeyConditionExpression: 'userid = :userid',
     ExpressionAttributeValues: {
-      ':u': userid,
-    },
-    ExpressionAttributeNames: {
-      '#userid': 'userid',
+      ':userid': userid,
     },
   };
 
   try {
-    const items = await dynamodb.query(params).promise();
+    const result = await dynamodb.call('query', params);
     console.log('Success');
-    console.log(items);
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify(items),
-    };
+    return success(result.Items);
   } catch (err) {
     console.error(`Failure: ${err.message}`);
-
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        message: `Error occurred while retrieving pain entries for user: ${userid}`,
-      }),
-    };
+    return failure({
+      message: `Error occurred while retrieving pain entries for user ${userid}`,
+    });
   }
 };
