@@ -16,7 +16,10 @@ module.exports.update = async event => {
     },
     UpdateExpression:
       'SET painLevel = :painLevel, note = :note, updatedAt = :updatedAt',
+    ConditionExpression: 'userid = :userid and entryid = :entryid',
     ExpressionAttributeValues: {
+      ':userid': userid,
+      ':entryid': entryid,
       ':painLevel': data.painLevel,
       ':note': data.note || '',
       ':updatedAt': timestamp,
