@@ -1,5 +1,5 @@
-const dynamodb = require('../libs/dynamo-lib');
-const { success, failure } = require('../libs/response-lib');
+const dynamodb = require('../libs/dynamo');
+const { success, failure } = require('../libs/response');
 
 module.exports.list = async event => {
   //TODO: change to use logged in userid

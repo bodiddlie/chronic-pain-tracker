@@ -1,6 +1,6 @@
 const uuid = require('uuid');
-const dynamodb = require('../libs/dynamo-lib');
-const { success, failure } = require('../libs/response-lib');
+const dynamodb = require('../libs/dynamo');
+const { success, failure } = require('../libs/response');
 
 module.exports.create = async event => {
   const timestamp = new Date().getTime();

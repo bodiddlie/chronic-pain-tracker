@@ -1,0 +1,19 @@
+  Resources:
+    PainDynamodbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: userid
+            AttributeType: S
+          - AttributeName: entryid
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userid
+            KeyType: HASH
+          - AttributeName: entryid
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.TABLE_NAME}

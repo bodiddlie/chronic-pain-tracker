@@ -1,11 +1,14 @@
-
 service: chronic-pain-tracker
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
 
 provider:
   name: aws
+  stage: dev
   runtime: nodejs12.x
   environment:
-    TABLE_NAME: ${self:service}-${opt:stage, self:provider.stage}
+    TABLE_NAME: ${self:service}-${self:custom.stage}
   iamRoleStatements:
     - Effect: "Allow"
       Action:
@@ -36,34 +39,19 @@ functions:
     handler: pain/get.get
     events:
       - http:
-        path: pain-entries/{entryid}
-        method: get
-        cors: true
+          path: pain-entries/{entryid}
+          method: get
+          cors: true
   update:
     handler: pain/update.update
     events:
       - http:
-        path: pain-entries/{entryid}
-        method: put
-        cors: true
+          path: pain-entries/{entryid}
+          method: put
+          cors: true
 
 resources:
-  Resources:
-    PainDynamodbTable:
-      Type: 'AWS::DynamoDB::Table'
-      DeletionPolicy: Retain
-      Properties:
-        AttributeDefinitions:
-          - AttributeName: userid
-            AttributeType: S
-          - AttributeName: entryid
-            AttributeType: S
-        KeySchema:
-          - AttributeName: userid
-            KeyType: HASH
-          - AttributeName: entryid
-            KeyType: RANGE
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: ${self:provider.environment.TABLE_NAME}
+  - ${file(resources/gateway-errors.yml)}
+  - ${file(resources/dynamo.yml)}
+  - ${file(resources/cognito-user-pool.yml)}
+  - ${file(resources/cognito-identity-pool.yml)}
