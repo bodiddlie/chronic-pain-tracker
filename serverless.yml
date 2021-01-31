@@ -1,3 +1,5 @@
+org: bodiddlie
+app: chronic-pain-tracker-app
 service: chronic-pain-tracker
 
 custom:
@@ -10,7 +12,7 @@ provider:
   environment:
     TABLE_NAME: ${self:service}-${self:custom.stage}
   iamRoleStatements:
-    - Effect: "Allow"
+    - Effect: 'Allow'
       Action:
         - dynamodb:Query
         - dynamodb:Scan
@@ -18,7 +20,7 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.TABLE_NAME}"
+      Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.TABLE_NAME}'
 
 functions:
   create:
@@ -32,9 +34,9 @@ functions:
     handler: pain/list.list
     events:
       - http:
-         path: pain-entries
-         method: get
-         cors: true
+          path: pain-entries
+          method: get
+          cors: true
   get:
     handler: pain/get.get
     events:
@@ -54,4 +56,4 @@ resources:
   - ${file(resources/gateway-errors.yml)}
   - ${file(resources/dynamo.yml)}
   - ${file(resources/cognito-user-pool.yml)}
-  - ${file(resources/cognito-identity-pool.yml)}
+  #- ${file(resources/cognito-identity-pool.yml)}
